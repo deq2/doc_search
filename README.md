@@ -9,7 +9,8 @@ cd deployments
 ./run.sh {ROOT_DIRECTORY}
 ```
 
-for example,
+Where {ROOT_DIRECTORY} is the root directory to give as input for the app.
+For example, we could give the /test folder as the root directory:
 ```
 ./run.sh /test
 ```
@@ -23,12 +24,13 @@ python app.py
 ```
 In both cases, the app will run on localhost:5000.
 
-To run the tests:
+To run the unit test:
 
 ```
+# Run from in the doc_search/ directory
+cd ../
 pip install pytest
-cd app
-python app.test.py.
+python app/app.test.py. {$USER}
 ```
 
 ## API Documentation
@@ -47,7 +49,7 @@ paths:
 				'200':
 					description: Successfully returned file or directory.
 					content: json
-						schema: array
+						schema: array or json
 						items:
 							type:object
 							properties:
@@ -58,7 +60,8 @@ paths:
 								is_directory
 								content
 				'400':
-					description: Invalid request
+					description: Invalid request, if the path is not file or directory,
+						or if the server receives keys other than path.
 					content:
 					application/json:
 					  schema:

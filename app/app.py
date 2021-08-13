@@ -24,15 +24,22 @@ def view_documents():
 	root = app.config['root']
 
 	if not isdir(root):
-		message = jsonify(message='Root directory does not exist')
+		message = jsonify(message='Given root directory is not a directory')
 		return make_response(message, 400)
 
 	relative_path = request.args.get('path')
-	# relative_path = request.form['path']
 
-	if relative_path is None:
+	import pdb
+	# pdb.set_trace()
+
+	if dict(request.args) == {}:
 		return render_template('view_documents.html', root=root)
 
+	# If the user submitted a request with a key other than path,
+	# return a 400 response.
+	elif relative_path is None:
+		message = jsonify(message='Invalid request')
+		return make_response(message, 400)
 	else:
 		# Strip / at the beginning, to comply with os.path.join.
 		if relative_path[0] == '/':
@@ -48,11 +55,10 @@ def view_documents():
 		if isfile(path):
 			with open(path, 'r') as file:
 				data = file.read()
-			return jsonify([contents=data])
+			return jsonify(contents=data)
 		# If the user enters a directory, list information for all files 
 		# in the directory.
 		if isdir(path):
-			print(listdir(path))
 			files = []
 			for filename in listdir(path):
 				status=stat(join(path, filename))
