@@ -74,8 +74,8 @@ class AppTestCase(unittest.TestCase):
 			response = tester.get('/?path=%2Ffoo')
 			self.assertEqual(response.status_code, 200)
 			data = response.get_data()
-			self.assertIn(b'\"name\": \"baz\"', data)
-			self.assertIn(b'\"name\": \"bar1.txt\"', data)
+			self.assertIn(b'\"name\":\"baz\"', data)
+			self.assertIn(b'\"name\":\"bar1.txt\"', data)
 			data_json = json.loads(response.get_data())
 			for file in data_json:
 				if file['name'] == 'baz':
@@ -88,7 +88,7 @@ class AppTestCase(unittest.TestCase):
 			response = tester.get('/?path=%2Ffoo%2Fbaz')
 			self.assertEqual(response.status_code, 200)
 			data = response.get_data()
-			self.assertIn(b'\"name\": \".hidden\"', data)
+			self.assertIn(b'\"name\":\".hidden\"', data)
 
 			response = tester.get('/?path=%2Ffoo%2Fbaz%2F.hidden')
 			self.assertEqual(response.status_code, 200)
