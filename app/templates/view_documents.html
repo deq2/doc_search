@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{% block title %} Root directory is {{ root }} {% endblock %}</h1>
+
+<form method="get">
+    <div class="form-group">
+        <label for="path">Path</label>
+        <input type="text" name="path"
+               placeholder="Path name" class="form-control"
+               value="{{ request.form['path'] }}"></input>
+    </div>
+
+    <div class="form-group">
+        <button type="enter" class="btn btn-primary">Enter</button>
+    </div>
+</form>
+{% endblock %}
