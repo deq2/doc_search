@@ -1,40 +1,39 @@
 import unittest
 from app import app
 from flask import json
+import pdb
+
 
 class BasicTestCase(unittest.TestCase):
-	def test_landing_page(self):
-		tester = app.test_client(self)
-		response = tester.get('/', content_type='html/text')
-
-		print(response)
-		self.assertEqual(response.status_code, 200)
-
-		response = tester.post('/', data=dict(root='/Users/deirdrequillen/weavegrid_app/test/'))
-		# Test input page redirects
-		self.assertEqual(response.status_code, 302)
 
 	def test_directories(self):
+			app.config['root'] = "/Users/deirdrequillen/doc_search/test"
+
 			tester = app.test_client(self)
-			response = tester.get('/view?root=%2FUsers%2Fdeirdrequillen%2Fweavegrid_app%2Ftest')
-			import pdb
+			response = tester.get('/?path=%2F')
 			self.assertEqual(response.status_code, 200)
-			response = tester.post('/view?root=%2FUsers%2Fdeirdrequillen%2Fweavegrid_app%2Ftest',
-				data=dict(path="/"))
+			data = json.loads(response.get_data())
+			assert {'owner': 'deirdrequillen', 'size': 160, 'permission': '755', 'is_directory': True, 'name': 'foo'} in data
+			assert {'name': 'test.txt', 'size': 35, 'is_directory': False, 'owner': 'deirdrequillen', 'permission': '644'} in data
+
+			response = tester.get('/?path=%2Ffoo')
 			self.assertEqual(response.status_code, 200)
-			self.assertIn(b'\"name\": \"foo\"', response.data)
-			self.assertIn(b'\"name\": \"test.txt\"', response.data)
+			data = json.loads(response.get_data())
+			print(data)
+			assert {"is_directory":True,"name":"baz","owner":"deirdrequillen","permission":"755","size":96} in data
+			assert {"is_directory":False,"name":"bar1.txt","owner":"deirdrequillen","permission":"644","size":4} in data
 
-			response = tester.post('/view?root=%2FUsers%2Fdeirdrequillen%2Fweavegrid_app%2Ftest',
-				data=dict(path="/foo"))			
-			self.assertIn(b'\"name\": \"bar1.txt\"', response.data)
-			data = json.loads(response.get_data(as_text=True))
-			assert {'name': 'baz', 'is_directory': True, 'size': 96, 'owner': 'deirdrequillen', 'permission': '755'} in data
 
-			response = tester.post('/view?root=%2FUsers%2Fdeirdrequillen%2Fweavegrid_app%2Ftest',
-				data=dict(path="/foo/baz"))
-			self.assertIn(b'\"name\": \".hidden\"', response.data)
+			response = tester.get('/?path=%2Ffoo%2Fbaz')
+			self.assertEqual(response.status_code, 200)
+			data = json.loads(response.get_data())
+			print(data)
+			assert {"is_directory":False,"name":".hidden","owner":"deirdrequillen","permission":"644","size":22} in data
 
+			response = tester.get('/?path=%2Ffoo%2Fbaz%2F.hidden')
+			self.assertEqual(response.status_code, 200)
+			data = json.loads(response.get_data())
+			assert {"contents":"This is a hidden file!"} == data
 
 
 if __name__ == '__main__':
