@@ -48,7 +48,7 @@ def view_documents():
 		if isfile(path):
 			with open(path, 'r') as file:
 				data = file.read()
-			return jsonify(contents=data)
+			return jsonify([contents=data])
 		# If the user enters a directory, list information for all files 
 		# in the directory.
 		if isdir(path):

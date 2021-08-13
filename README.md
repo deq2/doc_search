@@ -33,6 +33,7 @@ python app.test.py.
 
 ## API Documentation
 
+```
 paths:
 	/:
 		get:
@@ -44,6 +45,26 @@ paths:
 				type: string
 			responses:
 				'200':
-					description:
+					description: Successfully returned file or directory.
+					content: json
+						schema: array
+						items:
+							type:object
+							properties:
+								name
+								owner
+								size
+								permission
+								is_directory
+								content
+				'400':
+					description: Invalid request
 					content:
+					application/json:
+					  schema:
+					    type: object
+					    properties:   
+					      message:
+					        type: string
 
+```
