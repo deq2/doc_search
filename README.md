@@ -16,6 +16,13 @@ For example, we could give the /test folder as the root directory:
 ```
 will run the application in the /test root directory.
 
+
+To run the app with the root directory as a file on your local computer, do:
+
+```
+./run.sh /my_local_directory
+```
+
 To run locally from the command line (requires flask and Python 3):
 ```
 export FLASK_APP=app

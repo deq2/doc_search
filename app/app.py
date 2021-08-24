@@ -33,7 +33,7 @@ def view_documents():
 	# pdb.set_trace()
 
 	if dict(request.args) == {}:
-		return render_template('view_documents.html', root=root)
+		return render_template('view_documents.html', root=root[1:])
 
 	# If the user submitted a request with a key other than path,
 	# return a 400 response.
